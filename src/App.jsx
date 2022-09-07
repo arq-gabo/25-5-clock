@@ -5,7 +5,7 @@ import Header from "./components/Header";
 
 function App() {
 	return (
-		<div className="App border-solid h-screen flex flex-col justify-between items-center">
+		<div className="App border-solid h-screen flex flex-col justify-around items-center">
 			<Header />
 			<Clock />
 			<Footer />
