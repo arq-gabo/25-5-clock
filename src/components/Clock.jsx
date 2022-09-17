@@ -38,21 +38,19 @@ const Clock = () => {
 		sesionBreak = isSesionOrBreak;
 		const timerSec = setInterval(() => {
 			if (time === 0) {
+				playSound();
 				sesionBreak ? (sesionBreak = false) : (sesionBreak = true);
 				setIsSesionOrBreak(sesionBreak);
 				if (!sesionBreak) {
-					time = breakTime * 60000 - 1000;
+					time = breakTime * 60000;
 					setMiliSeconds(time);
 				} else {
-					time = sesionTime * 60000 - 1000;
+					time = sesionTime * 60000;
 					setMiliSeconds(time);
 				}
 			} else {
 				time -= 1000;
 				setMiliSeconds(time);
-			}
-			if (time === 8000) {
-				playSound();
 			}
 		}, 1000);
 		setIsCountSec(timerSec);
@@ -77,6 +75,8 @@ const Clock = () => {
 		setSesionTime(defaultSesion);
 		setBreakTime(defaultBreak);
 		setIsSesionOrBreak(true);
+
+		stopSound();
 	};
 
 	// function to increment o decrement break and session time
@@ -90,7 +90,13 @@ const Clock = () => {
 
 	// Objects to controller LenghtPanel Component
 	const sesionProps = {
-		title: "Sesion Length",
+		title: "Session Length",
+		id: {
+			title: "session-label",
+			clickDecrement: "session-decrement",
+			clickIncrement: "session-increment",
+			length: "session-length"
+		},
 		value: sesionTime,
 		add: () => {
 			if (!playCount && ifValidIncrement(sesionTime)) {
@@ -114,6 +120,12 @@ const Clock = () => {
 
 	const breakProps = {
 		title: "Break Length",
+		id: {
+			title: "break-label",
+			clickDecrement: "break-decrement",
+			clickIncrement: "break-increment",
+			length: "break-length"
+		},
 		value: breakTime,
 		add: () => {
 			if (!playCount && ifValidIncrement(breakTime)) {
@@ -136,8 +148,11 @@ const Clock = () => {
 	};
 
 	//Show minutes and seconds filter at format 1min = 60 sec
-	let minutes = Math.floor(miliSeconds / 60000);
-	let seconds = Math.floor((miliSeconds % 60000) / 1000).toFixed(0);
+	const returnMin = val => Math.floor(val / 60000);
+	const returnSec = val => Math.floor((val % 60000) / 1000).toFixed(0);
+
+	let minutes = returnMin(miliSeconds);
+	let seconds = returnSec(miliSeconds);
 
 	// Functionality to progress bar
 	const percentageProgressBar = (val, currentVal) =>
@@ -150,7 +165,11 @@ const Clock = () => {
 	//if true equivalent to text-amber-500 in tailwind
 	let colorsProgressBar;
 	let colorTextAndClock;
-	if (miliSeconds > 0 && miliSeconds < 8000) {
+	if (
+		returnMin(miliSeconds) === 0 &&
+		returnSec(miliSeconds) >= 0 &&
+		returnSec(miliSeconds) <= 10
+	) {
 		colorsProgressBar = "#f97316";
 		colorTextAndClock = "text-amber-500";
 	} else {
@@ -158,20 +177,29 @@ const Clock = () => {
 		colorTextAndClock = "";
 	}
 
+	// Sound Control
 	const playSound = () => {
 		const sound = document.getElementById("beep");
 		sound.play();
+	};
+
+	const stopSound = () => {
+		const sound = document.getElementById("beep");
+		sound.pause();
+		sound.currentTime = 0;
 	};
 
 	return (
 		<div className="text-amber-100 text-center w-72 h-72 relative">
 			<p
 				className={`${colorTextAndClock} text-2xl absolute left-1/2 top-10 -translate-x-1/2`}
+				id="timer-label"
 			>
 				{isSesionOrBreak ? "Session" : "Break"}
 			</p>
 			<p
 				className={`${colorTextAndClock} text-7xl absolute left-1/2 top-20 -translate-x-1/2`}
+				id="time-left"
 			>
 				{minutes < 10 ? `0${minutes}` : minutes}:
 				{seconds < 10 ? `0${seconds}` : seconds}
@@ -200,7 +228,7 @@ const Clock = () => {
 			</div>
 
 			<audio
-				src="https://res.cloudinary.com/dulwtefos/video/upload/v1663359427/fcc-react-project/alarm_gteggc.mp3"
+				src="https://res.cloudinary.com/dulwtefos/video/upload/v1663377067/fcc-react-project/alarm_xwwjlm.mp3"
 				id="beep"
 			/>
 		</div>
