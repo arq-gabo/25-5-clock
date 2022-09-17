@@ -1,4 +1,4 @@
-# 25+5+Clock
+# 25 + 5 Clock
 
 ![25+5+Clock](https://res.cloudinary.com/dulwtefos/image/upload/v1663359402/fcc-react-project/25-5-clock_cgbok2.jpg)
 
