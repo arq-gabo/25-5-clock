@@ -103,7 +103,7 @@ const Clock = () => {
 				setSesionTime(sesionTime + 1);
 			}
 
-			if (isSesionOrBreak && ifValidIncrement(sesionTime)) {
+			if (!playCount && isSesionOrBreak && ifValidIncrement(sesionTime)) {
 				setMiliSeconds((sesionTime + 1) * 60000);
 			}
 		},
@@ -112,7 +112,7 @@ const Clock = () => {
 				setSesionTime(sesionTime - 1);
 			}
 
-			if (isSesionOrBreak && ifValidDecrement(sesionTime)) {
+			if (!playCount && isSesionOrBreak && ifValidDecrement(sesionTime)) {
 				setMiliSeconds((sesionTime - 1) * 60000);
 			}
 		}
@@ -132,7 +132,7 @@ const Clock = () => {
 				setBreakTime(breakTime + 1);
 			}
 
-			if (!isSesionOrBreak && ifValidIncrement(breakTime)) {
+			if (!playCount && !isSesionOrBreak && ifValidIncrement(breakTime)) {
 				setMiliSeconds((breakTime + 1) * 60000);
 			}
 		},
@@ -141,7 +141,7 @@ const Clock = () => {
 				setBreakTime(breakTime - 1);
 			}
 
-			if (!isSesionOrBreak && ifValidDecrement(breakTime)) {
+			if (!playCount && !isSesionOrBreak && ifValidDecrement(breakTime)) {
 				setMiliSeconds((breakTime - 1) * 60000);
 			}
 		}
